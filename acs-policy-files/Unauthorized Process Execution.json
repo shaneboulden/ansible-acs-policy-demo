@@ -13,13 +13,22 @@
     ],
     "eventSource": "DEPLOYMENT_EVENT",
     "exclusions": [],
-    "scope": [],
+    "scope": [
+        {
+            "cluster": "e40ad538-a2fd-4363-bcdb-a7fd24806aad",
+            "namespace": "devops",
+            "label": null
+        }
+    ],
     "severity": "HIGH_SEVERITY",
-    "enforcementActions": [],
+    "enforcementActions": [
+        "KILL_POD_ENFORCEMENT",
+        "FAIL_KUBE_REQUEST_ENFORCEMENT"
+    ],
     "notifiers": [],
     "SORTName": "Unauthorized Process Execution",
     "SORTLifecycleStage": "RUNTIME",
-    "SORTEnforcement": false,
+    "SORTEnforcement": true,
     "policyVersion": "1.1",
     "policySections": [
         {
