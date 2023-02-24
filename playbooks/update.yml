@@ -1,0 +1,60 @@
+---
+- name: Update ACS policies from code
+  hosts: localhost
+  gather_facts: true
+
+  vars_files:
+  - vault.yml
+
+  vars:
+    acs_host: "{{ vaulted_acs_host }}"
+    acs_token: "{{ vaulted_acs_token }}"
+
+  tasks:
+
+    - name: Find all policy files
+      find:
+        paths: ../acs-policy-files/
+        file_type: file
+        patterns: "*.json"
+      register: desired_policies
+
+    - name: Read JSON policy files
+      set_fact:
+        desired_policy_list: "{{ desired_policy_list | d([]) + [(lookup('file', item.path) | from_json) ] }}"
+      loop: "{{ desired_policies.files }}"
+
+    - name: Import and overwrite user-managed policies
+      uri:
+        url: "https://{{ acs_host }}/v1/policies/import"
+        headers:
+          Authorization: "Bearer {{ acs_token }}"
+        method: POST
+        body_format: json
+        body:
+          metadata:
+            overwrite: true
+          policies: "{{ desired_policy_list }}"
+        force_basic_auth: yes
+        status_code: 200
+        validate_certs: false
+      register: answer
+      no_log: false
+      changed_when: true
+
+    ## Ideally ACS admins shouldn't make any changes to default policies. But, we update these anyway, as managing multiple copies of the same policy can be confusing.
+    - name: Update changes to default policies
+      uri:
+        url: "https://{{ acs_host }}/v1/policies/{{ item.policy.id }}"
+        headers:
+          Authorization: "Bearer {{ acs_token }}"
+        method: PUT
+        body_format: json
+        body: "{{ item.policy }}"
+        force_basic_auth: yes
+        status_code: 200
+        body_format: json
+        validate_certs: false
+      no_log: false
+      changed_when: true
+      loop: "{{ answer.json.responses }}"
