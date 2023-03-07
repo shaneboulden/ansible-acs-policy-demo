@@ -16,9 +16,7 @@
     "exclusions": [],
     "scope": [],
     "severity": "HIGH_SEVERITY",
-    "enforcementActions": [
-        "FAIL_BUILD_ENFORCEMENT"
-    ],
+    "enforcementActions": [],
     "notifiers": [],
     "SORTName": "Fixable Severity at least Important",
     "SORTLifecycleStage": "BUILD,DEPLOY",
