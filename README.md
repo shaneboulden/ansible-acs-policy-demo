@@ -1,54 +1,85 @@
-# Manage policies in ACS with Ansible
+# Ansible and ACS Policy-as-Code demo
 
-## Challenge
+A demonstration showcasing GitOps policy-as-code approaches with Red Hat Advanced Cluster Security for Kubernetes (ACS) and Ansible.
 
-We want to manage ACS policies in a GitOps fashion with two major goals:
+## Preparing the demo environment
+Fork this repo to your own account.
 
-1.  All policies are stored in git and version controlled.
-2.  Policies can be created using the ACS Central GUI.
+### ACS
+Create a new 'StackRox API integration' admin token in Red Hat Advanced Cluster Security for Kubernetes (ACS) and copy the value.
 
-## Solution
+![StackRox API token 1](/docs-images/stackrox-api-token-1.png)
 
-This project implements an Ansible-based solution that will
+![StackRox API token 2](/docs-images/stackrox-api-token-2.png)
 
-1.  Pull desired configuration from a git repo.
-2.  Pull the current configuration from ACS.
-3.  Change current policies to the desired state.
-4.  Create a new branch in the git repo with any changes that were made.
-
-This meets our goals as any new policies created in the UI are reflected in the new branch which can, then, be merged into `main` via a pull request.
-
-## Prep
-
-Create a new git repo and initialize it with a README.md.  Create a Personal Access Token (PAT) that can read from & write to the repo.
-
-Create an ACS API token.  The ACS API token can either have the Admin role or, if you prefer, a custom role with read/write permission to the /policies API endpoint.  More info can be found [here](https://docs.openshift.com/acs/3.67/cli/getting-started-cli.html#cli-authentication_cli-getting-started).
-
-Install Ansible Galaxy requirements with `ansible-galaxy install -r requirements.yml`.
-
-## Ansible
-
-Create your Ansible Vault with those variables:
-
+Update the Ansible `vault.yml` to reference your ACS cluster and the API token.
 ```yaml
-vaulted_acs_host: <your-acs-host>
-vaulted_acs_token: <your-acs-API-token>
-vaulted_git_user: <git user with read/write access>
-vaulted_git_pat: <git PAT>
-vaulted_git_url: <http URL to the git repo>
+vaulted_acs_host: central-acs-central.apps.cluster.example.com:443
+vaulted_acs_token: your-acs-admin-token
 ```
 
-Run the `initial.yml` playbook to create the desired policy collection
+### Ansible
+Create the components in Ansible Automation Platform required to orchestrate policy updates.
 
-```bash
-ansible-playbook --ask-vault-pass initial.yml
-```
+#### Project
+Create a new project, and replace the URL with your forked copy of this repo. Ensure that the following options are checked:
+- Discard local changes before syncing
+- Delete the project before syncing
+- Update revision on job launch
 
-When needed, execute the `update.yml` playbook to compare actual policies to desired, ensure that desired policies are applied, and create a new branch with any changes.
+![Ansible ACS project](/docs-images/ansible-acs-project.png)
 
-```bash
-ansible-playbook --ask-vault-pass update.yml
-```
+#### Credentials
+Create a new `Vault` credential
 
-If desired, this could be triggered by ACS audit log entries for policy changes and/or by git webhooks on updates to the `main` branch.
+![Ansible ACS Vault credentials](/docs-images/ansible-acs-vault.png)
 
+#### Inventory
+Create an inventory for `Localhost`, with a host for `127.0.0.1`. Ensure that the `ansible_connection: local` variable is specified for the host.
+
+![Ansible localhost inventory 1](/docs-images/ansible-localhost-inventory-1.png)
+
+![Ansible localhost inventory 2](/docs-images/ansible-localhost-inventory-2.png)
+
+#### Template
+Create a new template in Ansible, specifying the following:
+- Inventory: Localhost (from above)
+- Project: ACS Policy as Code source (from above)
+- Playbook: playbooks/update.yml
+- Credentials: Vault (from above)
+
+Select 'Enable Webhook' and save the template. A new webhook token will be provided once the template is saved.
+
+![Ansible ACS template 1](/docs-images/ansible-acs-template-1.png)
+
+![Ansible ACS template 2](/docs-images/ansible-acs-template-2.png)
+
+### Webhooks
+
+Navigate to `Settings` in your forked repo and select `Webhooks`.
+
+![Ansible ACS webhook 1](/docs-images/ansible-acs-webhook-1.png)
+
+Select `Add webhook` and configure a new webhook using the Ansible webhook endpoint.
+
+![Ansible ACS webhook 2](/docs-images/ansible-acs-webhook-2.png)
+
+## Running the demo
+
+Find a policy in ACS, such as `Curl in Image`. Verify that the policy is currently disabled.
+
+![Ansible ACS Policy 1](/docs-images/ansible-acs-policy-1.png)
+
+Find the corresponding JSON file, in this case `Curl in Image.json`. Update the `disabled` attribute to `false`.
+
+![Ansible ACS Policy 2](/docs-images/ansible-acs-policy-2.png)
+
+Commit and push the change to your repo, and verify that the Ansible automation jobs start.
+
+![Ansible ACS Policy 3](/docs-images/ansible-acs-policy-3.png)
+
+![Ansible ACS Policy 4](/docs-images/ansible-acs-policy-4.png)
+
+Once the Ansible automation jobs complete, verify that the policy is now `Enabled`.
+
+![Ansible ACS Policy 5](/docs-images/ansible-acs-policy-5.png)
