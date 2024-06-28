@@ -3,12 +3,9 @@
   hosts: localhost
   gather_facts: false
 
-  vars_files:
-  - vault.yml
-
   vars:
-    acs_host: "{{ vaulted_acs_host }}"
-    acs_token: "{{ vaulted_acs_token }}"
+    acs_host: "{{ lookup('ansible.builtin.env','RHACS_URL') }}"
+    acs_token: "{{ lookup('ansible.builtin.env','RHACS_TOKEN') }}"
 
   tasks:
 
