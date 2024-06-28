@@ -1,0 +1,57 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: update-rhacs-policies
+spec:
+  params:
+    - name: git-repo-revision
+      type: string
+      description: Git branch
+      default: main
+    - name: git-repo-url
+      type: string
+      description: Git repo
+      default: https://github.com/shaneboulden/acs-policy-demo.git
+    - name: context-dir
+      type: string
+    - name: rhacs-secret
+      type: string
+  workspaces:
+    - name: ansible
+  tasks:
+  - name: clone-sources
+    taskRef:
+      resolver: cluster
+      params:
+        - name: kind
+          value: task
+        - name: namespace
+          value: openshift-pipelines
+        - name: name
+          value: git-clone
+    params:
+      - name: URL
+        value: '$(params.git-repo-url)'
+      - name: revision
+        value: '$(params.git-repo-revision)'
+      - name: deleteExisting
+        value: 'true'
+    workspaces:
+      - name: output
+        workspace: ansible
+  - name: update-policies
+    taskRef:
+      name: ansible-acs-update
+      kind: Task
+    runAfter:
+      - clone-sources
+    params:
+      - name: project-dir
+        value: '.'
+      - name: rhacs-secret
+        value: '$(params.rhacs-secret)'
+    workspaces:
+      - name: runner-dir
+        workspace: ansible
+
+

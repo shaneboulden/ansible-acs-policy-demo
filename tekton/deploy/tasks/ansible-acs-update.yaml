@@ -1,0 +1,62 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: ansible-acs-update
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/tags: ansible-acs-update
+spec:
+  description: >-
+    
+  params:
+  - name: project-dir
+    description: The project directory under the workspace runner-dir
+    default: 'playbooks'
+  - name: rhacs-secret
+    description: Secret containing RHACS URL and TOKEN
+  - name: image
+    description: Ansible runner image.
+    default: quay.io/ansible/ansible-runner:stable-2.12-latest #tag: stable-2.12-latest
+  workspaces:
+    - name: runner-dir
+      description: The Ansible runner directory
+  steps:
+    - name: requirements
+      image: $(params.image)
+      script: |
+        #!/bin/bash
+        set -e
+
+        if [ -f requirements.txt ];
+        then
+          pip3 install --user \
+            -r requirements.txt
+        fi
+
+        if [ -f  requirements.yml ];
+        then
+          ansible-galaxy role install -vv \
+            -r requirements.yml
+          ansible-galaxy collection install -vv \
+            -r requirements.yml
+        fi
+      workingDir: '$(workspaces.runner-dir.path)/$(params.project-dir)'
+
+    - name: run-playbook
+      image: $(params.image)
+      env: 
+        - name: RHACS_URL
+          valueFrom:
+            secretKeyRef: 
+              name: $(params.rhacs-secret)
+              key: rhacs_url
+        - name: RHACS_TOKEN
+          valueFrom: 
+            secretKeyRef:
+              name: $(params.rhacs-secret)
+              key: rhacs_token
+      command: ['ansible-runner','run','-p','update.yml','.']
+      workingDir: '$(workspaces.runner-dir.path)'
