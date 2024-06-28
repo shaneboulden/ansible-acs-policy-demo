@@ -4,8 +4,8 @@
   gather_facts: true
 
   vars:
-    acs_host: "rhacs.example.com"
-    acs_token: "rhacs-token"
+    acs_host: "{{ lookup('ansible.builtin.env','RHACS_URL') }}"
+    acs_token: "{{ lookup('ansible.builtin.env','RHACS_TOKEN') }}"
 
   tasks:
 
@@ -50,7 +50,6 @@
         body: "{{ item.policy }}"
         force_basic_auth: yes
         status_code: 200
-        body_format: json
         validate_certs: false
       no_log: false
       changed_when: true
