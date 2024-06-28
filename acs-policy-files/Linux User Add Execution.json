@@ -6,8 +6,8 @@
     "remediation": "Consider using a base image that doesn't have a shell such as SCRATCH or gcr.io/distroless. If not, modify your Dockerfile to use the exec form of CMD/ENTRYPOINT ([\"using braces\"]) instead of the shell form (no braces)",
     "disabled": false,
     "categories": [
-        "System Modification",
-        "Privileges"
+        "Privileges",
+        "System Modification"
     ],
     "lifecycleStages": [
         "RUNTIME"
@@ -48,7 +48,7 @@
             ]
         }
     ],
-    "criteriaLocked": true,
-    "mitreVectorsLocked": true,
-    "isDefault": true
+    "criteriaLocked": false,
+    "mitreVectorsLocked": false,
+    "isDefault": false
 }

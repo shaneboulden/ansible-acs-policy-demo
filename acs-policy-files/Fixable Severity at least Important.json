@@ -20,7 +20,7 @@
     "notifiers": [],
     "SORTName": "Fixable Severity at least Important",
     "SORTLifecycleStage": "BUILD,DEPLOY",
-    "SORTEnforcement": true,
+    "SORTEnforcement": false,
     "policyVersion": "1.1",
     "policySections": [
         {
@@ -50,7 +50,7 @@
         }
     ],
     "mitreAttackVectors": [],
-    "criteriaLocked": true,
-    "mitreVectorsLocked": true,
-    "isDefault": true
+    "criteriaLocked": false,
+    "mitreVectorsLocked": false,
+    "isDefault": false
 }

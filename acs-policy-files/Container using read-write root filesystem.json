@@ -6,8 +6,8 @@
     "remediation": "Use a read-only root filesystem, and use volume mounts to allow writes to specific sub-directories depending on your application's needs.",
     "disabled": true,
     "categories": [
-        "Privileges",
-        "Docker CIS"
+        "Docker CIS",
+        "Privileges"
     ],
     "lifecycleStages": [
         "DEPLOY"
@@ -93,7 +93,7 @@
         }
     ],
     "mitreAttackVectors": [],
-    "criteriaLocked": true,
-    "mitreVectorsLocked": true,
-    "isDefault": true
+    "criteriaLocked": false,
+    "mitreVectorsLocked": false,
+    "isDefault": false
 }

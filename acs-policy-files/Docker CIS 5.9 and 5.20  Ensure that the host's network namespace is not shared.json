@@ -222,7 +222,7 @@
         }
     ],
     "mitreAttackVectors": [],
-    "criteriaLocked": true,
-    "mitreVectorsLocked": true,
-    "isDefault": true
+    "criteriaLocked": false,
+    "mitreVectorsLocked": false,
+    "isDefault": false
 }

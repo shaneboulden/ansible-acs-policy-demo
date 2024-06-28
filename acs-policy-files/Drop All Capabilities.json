@@ -1,20 +1,31 @@
 {
-    "id": "d3e480c1-c6de-4cd2-9006-9a3eb3ad36b6",
-    "name": "Required Image Label",
-    "description": "Alert on deployments with images missing the specified label.",
-    "rationale": "Only images with the specified label should be deployed to ensure all deployments contain approved images.",
-    "remediation": "Request that the maintainer add the required label to the image.",
+    "id": "dd478ad6-b9c9-4abf-92e0-847408aecb8d",
+    "name": "Drop All Capabilities",
+    "description": "Alert when a deployment does not drop all capabilities.",
+    "rationale": "Because capabilities permit privileged operations, it is a recommended best practice to drop all capabilities that a deployment can have, and then add only the capabilities that the deployment needs.",
+    "remediation": "Ensure that the deployment manifest has `drop: ALL` in the securityContext section of the container manifest.",
     "disabled": true,
     "categories": [
-        "DevOps Best Practices",
-        "Security Best Practices"
+        "DevOps Best Practices"
     ],
     "lifecycleStages": [
-        "BUILD",
         "DEPLOY"
     ],
     "eventSource": "NOT_APPLICABLE",
     "exclusions": [
+        {
+            "name": "Don't alert on stackrox namespace",
+            "deployment": {
+                "name": "",
+                "scope": {
+                    "cluster": "",
+                    "namespace": "stackrox",
+                    "label": null
+                }
+            },
+            "image": null,
+            "expiration": null
+        },
         {
             "name": "Don't alert on kube-system namespace",
             "deployment": {
@@ -46,8 +57,8 @@
     "severity": "LOW_SEVERITY",
     "enforcementActions": [],
     "notifiers": [],
-    "SORTName": "Required Image Label",
-    "SORTLifecycleStage": "BUILD,DEPLOY",
+    "SORTName": "Drop All Capabilities",
+    "SORTLifecycleStage": "DEPLOY",
     "SORTEnforcement": false,
     "policyVersion": "1.1",
     "policySections": [
@@ -55,12 +66,12 @@
             "sectionName": "",
             "policyGroups": [
                 {
-                    "fieldName": "Required Image Label",
+                    "fieldName": "Drop Capabilities",
                     "booleanOperator": "OR",
                     "negate": false,
                     "values": [
                         {
-                            "value": "required-label.*=required-value.*"
+                            "value": "ALL"
                         }
                     ]
                 }
@@ -68,7 +79,7 @@
         }
     ],
     "mitreAttackVectors": [],
-    "criteriaLocked": false,
-    "mitreVectorsLocked": false,
-    "isDefault": false
+    "criteriaLocked": true,
+    "mitreVectorsLocked": true,
+    "isDefault": true
 }

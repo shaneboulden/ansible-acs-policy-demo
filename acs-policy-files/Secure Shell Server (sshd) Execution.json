@@ -6,8 +6,8 @@
     "remediation": "If ssh is absolutely required, ensure that it is not using default authentication. Otherwise, consider removing it from the container altogether.",
     "disabled": false,
     "categories": [
-        "Network Tools",
-        "Docker CIS"
+        "Docker CIS",
+        "Network Tools"
     ],
     "lifecycleStages": [
         "RUNTIME"
@@ -59,7 +59,7 @@
             ]
         }
     ],
-    "criteriaLocked": true,
-    "mitreVectorsLocked": true,
-    "isDefault": true
+    "criteriaLocked": false,
+    "mitreVectorsLocked": false,
+    "isDefault": false
 }

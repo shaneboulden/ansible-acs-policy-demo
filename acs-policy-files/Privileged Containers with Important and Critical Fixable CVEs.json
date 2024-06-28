@@ -6,8 +6,8 @@
     "remediation": "Use your package manager to update to a fixed version in future builds, run your container with lower privileges, or speak with your security team to mitigate the vulnerabilities.",
     "disabled": false,
     "categories": [
-        "Vulnerability Management",
-        "Privileges"
+        "Privileges",
+        "Vulnerability Management"
     ],
     "lifecycleStages": [
         "DEPLOY"
@@ -74,7 +74,7 @@
         }
     ],
     "mitreAttackVectors": [],
-    "criteriaLocked": true,
-    "mitreVectorsLocked": true,
-    "isDefault": true
+    "criteriaLocked": false,
+    "mitreVectorsLocked": false,
+    "isDefault": false
 }

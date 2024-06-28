@@ -6,8 +6,8 @@
     "remediation": "Verify that privileged capabilities are required and cannot be provided with a subset of other controls.",
     "disabled": false,
     "categories": [
-        "Privileges",
-        "Docker CIS"
+        "Docker CIS",
+        "Privileges"
     ],
     "lifecycleStages": [
         "DEPLOY"
@@ -197,7 +197,7 @@
         }
     ],
     "mitreAttackVectors": [],
-    "criteriaLocked": true,
-    "mitreVectorsLocked": true,
-    "isDefault": true
+    "criteriaLocked": false,
+    "mitreVectorsLocked": false,
+    "isDefault": false
 }

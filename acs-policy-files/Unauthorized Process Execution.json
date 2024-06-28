@@ -13,13 +13,7 @@
     ],
     "eventSource": "DEPLOYMENT_EVENT",
     "exclusions": [],
-    "scope": [
-        {
-            "cluster": "e40ad538-a2fd-4363-bcdb-a7fd24806aad",
-            "namespace": "devops",
-            "label": null
-        }
-    ],
+    "scope": [],
     "severity": "HIGH_SEVERITY",
     "enforcementActions": [
         "KILL_POD_ENFORCEMENT",
@@ -48,7 +42,7 @@
         }
     ],
     "mitreAttackVectors": [],
-    "criteriaLocked": true,
-    "mitreVectorsLocked": true,
-    "isDefault": true
+    "criteriaLocked": false,
+    "mitreVectorsLocked": false,
+    "isDefault": false
 }

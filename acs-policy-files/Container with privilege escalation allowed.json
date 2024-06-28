@@ -6,8 +6,8 @@
     "remediation": "Verify that privileged escalation is required and cannot be provided with a subset of other controls. Disable privilege escalation by setting allowPrivilegeEscalation to false.",
     "disabled": false,
     "categories": [
-        "Security Best Practices",
-        "Privileges"
+        "Privileges",
+        "Security Best Practices"
     ],
     "lifecycleStages": [
         "DEPLOY"
@@ -40,7 +40,7 @@
         }
     ],
     "mitreAttackVectors": [],
-    "criteriaLocked": true,
-    "mitreVectorsLocked": true,
-    "isDefault": true
+    "criteriaLocked": false,
+    "mitreVectorsLocked": false,
+    "isDefault": false
 }
