@@ -3,12 +3,9 @@
   hosts: localhost
   gather_facts: true
 
-  vars_files:
-  - vault.yml
-
   vars:
-    acs_host: "{{ vaulted_acs_host }}"
-    acs_token: "{{ vaulted_acs_token }}"
+    acs_host: "rhacs.example.com"
+    acs_token: "rhacs-token"
 
   tasks:
 
