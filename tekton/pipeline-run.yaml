@@ -4,10 +4,8 @@ metadata:
   generateName: update-rhacs-policies
 spec:
   params: 
-    - name: "git-repo-revision"
-      value: "main"
     - name: "git-repo-url"
-      value: "https://github.com/shaneboulden/ansible-acs-policy-demo.git"
+      value: "github.com/shaneboulden/ansible-acs-policy-demo.git"
     - name: "context-dir"
       value: "/"
     - name: "project-dir"

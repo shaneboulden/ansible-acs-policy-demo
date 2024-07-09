@@ -18,7 +18,7 @@ spec:
   - name: branch
     description: git revision to checkout (branch, tag, sha, ref…)
     type: string
-    default: master
+    default: main
   - name: submodules
     description: defines if the resource should initialize and fetch the submodules
     type: string
@@ -48,18 +48,18 @@ spec:
     description: The built image tag
   steps:
   - name: clone
-    image: "quay.io/smileyfritz/cloner:latest"
+    image: "registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:868966ef9d4b54952d8a74eb83bba40eb1f52c0148994fa704efd0e3797c61c5"
     env:
       - name: GIT_USERNAME
         valueFrom:
           secretKeyRef:
             name: codecommit-credentials
-            key: username
+            key: GIT_USERNAME
       - name: GIT_PASSWORD
         valueFrom:
           secretKeyRef:
             name: codecommit-credentials
-            key: password
+            key: GIT_PASSWORD
     script: |
       CHECKOUT_DIR="$(workspaces.source.path)/"
 
@@ -86,7 +86,7 @@ spec:
       REVISION_CLEAN="${REVISION#refs/heads/}"
       REVISION_CLEAN="${REVISION_CLEAN#refs/tags/}"
 
-      git clone "https://${GIT_USERNAME}:${GIT_PASSWORD}@$(params.repositoryurl)" --recurse-submodules --depth 1 -b "$REVISION_CLEAN" "$CHECKOUT_DIR"
+      git clone "https://${GIT_USERNAME}:${GIT_PASSWORD}@$(params.url)" --recurse-submodules --depth 1 -b "$REVISION_CLEAN" "$CHECKOUT_DIR"
 
       cd "$CHECKOUT_DIR"
       RESULT_SHA="$(git rev-parse HEAD | tr -d '\n')"
